@@ -25,6 +25,7 @@ create table if not exists responses (
   subject_id  text not null references subjects(id) on delete cascade,
   circle      text not null,
   answers     jsonb not null,           -- { itemId: 1..5 } sur les 16 items 360
+  author_name text,                     -- rempli seulement si manager consent à être cité
   created_at  timestamptz not null default now()
 );
 

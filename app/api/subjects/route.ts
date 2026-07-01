@@ -40,9 +40,10 @@ export async function GET(req: Request) {
   const subject = await store.getSubject(id);
   if (!subject) return Response.json({ error: "introuvable" }, { status: 404 });
 
-  const [responses, invitations] = await Promise.all([
+  const [responses, invitations, namedManager] = await Promise.all([
     store.listResponses(id),
     store.listInvitations(id),
+    store.getNamedManager(id),
   ]);
   return Response.json({
     name: subject.name,
@@ -50,6 +51,7 @@ export async function GET(req: Request) {
     selfScores: subject.selfScores,
     responses, // ObserverResponse[] : { circle, responses }
     invitations: invitations.map((i) => ({ circle: i.circle, responded: i.responded })),
+    namedManager, // string | null — manager ayant consenti à être cité
   });
 }
 

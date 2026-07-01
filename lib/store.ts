@@ -38,8 +38,10 @@ export interface Store {
   deleteSubject(id: string): Promise<void>; // supprime sujet + invitations + réponses (RGPD)
   listInvitations(subjectId: string): Promise<Invitation[]>;
   getInvitation(token: string): Promise<Invitation | null>;
-  saveResponse(token: string, answers: Record<string, number>): Promise<void>;
+  saveResponse(token: string, answers: Record<string, number>, authorName?: string | null): Promise<void>;
   listResponses(subjectId: string): Promise<ObserverResponse[]>;
+  /** Nom du manager s'il a consenti à être cité (cercle can_be_named), sinon null. */
+  getNamedManager(subjectId: string): Promise<string | null>;
 }
 
 // ---------- Adaptateur mémoire (dev / démo) ----------
@@ -48,7 +50,10 @@ export interface Store {
 interface MemDB {
   subjects: Map<string, Subject>;
   invitations: Map<string, Invitation>; // clé = token
-  responses: Map<string, { subjectId: string; circle: string; answers: Record<string, number> }>; // clé = token
+  responses: Map<
+    string,
+    { subjectId: string; circle: string; answers: Record<string, number>; authorName: string | null }
+  >; // clé = token
 }
 
 function memdb(): MemDB {
@@ -105,12 +110,12 @@ class MemoryStore implements Store {
     return memdb().invitations.get(token) ?? null;
   }
 
-  async saveResponse(token: string, answers: Record<string, number>) {
+  async saveResponse(token: string, answers: Record<string, number>, authorName: string | null = null) {
     const db = memdb();
     const inv = db.invitations.get(token);
     if (!inv) throw new Error("invitation introuvable");
     if (inv.responded) throw new Error("déjà répondu");
-    db.responses.set(token, { subjectId: inv.subjectId, circle: inv.circle, answers });
+    db.responses.set(token, { subjectId: inv.subjectId, circle: inv.circle, answers, authorName });
     inv.consented = true;
     inv.responded = true;
   }
@@ -119,6 +124,13 @@ class MemoryStore implements Store {
     return [...memdb().responses.values()]
       .filter((r) => r.subjectId === subjectId)
       .map((r) => ({ circle: r.circle, responses: r.answers }));
+  }
+
+  async getNamedManager(subjectId: string): Promise<string | null> {
+    const named = [...memdb().responses.values()].find(
+      (r) => r.subjectId === subjectId && r.circle === "manager" && !!r.authorName
+    );
+    return named?.authorName ?? null;
   }
 }
 

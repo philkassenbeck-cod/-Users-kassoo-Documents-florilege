@@ -3,6 +3,11 @@
 // POST { token, answers } → enregistre la réponse (consentement impliqué à l'envoi).
 
 import { getStore } from "@/lib/store";
+import { florilegeData as data } from "@core";
+
+function circleCanBeNamed(circleId: string): boolean {
+  return !!data.three_sixty.circles.find((c) => c.id === circleId)?.can_be_named;
+}
 
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token");
@@ -19,6 +24,7 @@ export async function GET(req: Request) {
     pronoun: subject.pronoun,
     lang: subject.lang,
     circle: inv.circle,
+    canBeNamed: circleCanBeNamed(inv.circle), // manager → peut consentir à être cité
     responded: inv.responded,
   });
 }
@@ -30,7 +36,15 @@ export async function POST(req: Request) {
     return Response.json({ error: "requête invalide" }, { status: 400 });
   }
   try {
-    await getStore().saveResponse(token, body.answers as Record<string, number>);
+    const store = getStore();
+    // Le nom n'est retenu que si le cercle l'autorise (manager) et qu'un nom est fourni.
+    const inv = await store.getInvitation(token);
+    let authorName: string | null = null;
+    if (inv && circleCanBeNamed(inv.circle) && typeof body.authorName === "string") {
+      const trimmed = body.authorName.trim().slice(0, 60);
+      if (trimmed) authorName = trimmed;
+    }
+    await store.saveResponse(token, body.answers as Record<string, number>, authorName);
     return Response.json({ ok: true });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "erreur";

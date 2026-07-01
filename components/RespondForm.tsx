@@ -18,10 +18,11 @@ interface Meta {
   name: string;
   lang: Lang;
   circle: string;
+  canBeNamed: boolean;
   responded: boolean;
 }
 
-type Phase = "loading" | "invalid" | "done" | "consent" | "form" | "thanks";
+type Phase = "loading" | "invalid" | "done" | "consent" | "form" | "sign" | "thanks";
 
 export function RespondForm({ token }: { token: string }) {
   const [meta, setMeta] = useState<Meta | null>(null);
@@ -29,6 +30,7 @@ export function RespondForm({ token }: { token: string }) {
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [pos, setPos] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [signName, setSignName] = useState("");
 
   const items = useMemo(() => observerItems(data), []);
   const lang: Lang = meta?.lang ?? "fr";
@@ -60,19 +62,22 @@ export function RespondForm({ token }: { token: string }) {
     setAnswers(next);
     if (pos + 1 < total) {
       setPos(pos + 1);
+    } else if (meta?.canBeNamed) {
+      // Manager : proposer de signer (consentement) avant l'envoi.
+      setPhase("sign");
     } else {
-      await submit(next);
+      await submit(next, null);
     }
   }
 
-  async function submit(finalAnswers: Record<string, number>) {
+  async function submit(finalAnswers: Record<string, number>, authorName: string | null) {
     if (busy) return;
     setBusy(true);
     try {
       const res = await fetch("/api/respond", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, answers: finalAnswers }),
+        body: JSON.stringify({ token, answers: finalAnswers, authorName }),
       });
       setPhase(res.ok ? "thanks" : "done");
     } finally {
@@ -175,6 +180,51 @@ export function RespondForm({ token }: { token: string }) {
                   ← {UI.back[lang]}
                 </button>
               )}
+            </div>
+          )}
+
+          {phase === "sign" && meta && (
+            <div className="fl-rise" style={{ paddingTop: 10 }}>
+              <h1 style={{ fontFamily: DISPLAY, fontSize: 28, fontWeight: 400, lineHeight: 1.1, margin: 0 }}>
+                {t("respSignTitle")}
+              </h1>
+              <p style={{ fontSize: 14, lineHeight: 1.55, color: C.porcelain, marginTop: 16 }}>
+                {t("respSignBody").replace(/\{name\}/g, meta.name)}
+              </p>
+              <input
+                value={signName}
+                onChange={(e) => setSignName(e.target.value)}
+                placeholder={t("respSignPlaceholder")}
+                maxLength={60}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  marginTop: 18,
+                  padding: "12px 14px",
+                  borderRadius: 12,
+                  border: `1px solid ${C.line}`,
+                  background: C.panel,
+                  color: C.porcelain,
+                  fontSize: 15,
+                  fontFamily: DISPLAY,
+                }}
+              />
+              <button
+                className="fl-btn fl-reveal"
+                style={{ marginTop: 16, width: "100%", opacity: signName.trim() && !busy ? 1 : 0.45 }}
+                disabled={!signName.trim() || busy}
+                onClick={() => submit(answers, signName.trim())}
+              >
+                {t("respSignConfirm")}
+              </button>
+              <button
+                className="fl-btn"
+                style={{ marginTop: 12, width: "100%", background: "transparent", color: C.muted, fontSize: 13 }}
+                disabled={busy}
+                onClick={() => submit(answers, null)}
+              >
+                {t("respSignSkip")}
+              </button>
             </div>
           )}
 

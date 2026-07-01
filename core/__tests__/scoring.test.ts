@@ -94,4 +94,21 @@ describe("écart 360 — pépite (angle mort positif)", () => {
     const gaps = computeGaps(data, {}, observers, "manager");
     for (const g of gaps) expect(g.other).toBeNull();
   });
+
+  it("bypassThreshold : un manager seul consentant est affiché (exception nominative)", () => {
+    const observers: ObserverResponse[] = [
+      { circle: "manager", responses: { rayonner_assertivite_1: 5, rayonner_assertivite_2: 5 } },
+    ];
+    // Par défaut : masqué (seuil d'anonymat).
+    const hidden = computeGaps(data, {}, observers, "manager").find(
+      (g) => g.forceId === "rayonner_assertivite"
+    )!;
+    expect(hidden.other).toBeNull();
+    // Avec consentement explicite : affiché.
+    const shown = computeGaps(data, {}, observers, "manager", { bypassThreshold: true }).find(
+      (g) => g.forceId === "rayonner_assertivite"
+    )!;
+    expect(shown.other).toBeCloseTo(5, 5);
+    expect(shown.nRespondents).toBe(1);
+  });
 });

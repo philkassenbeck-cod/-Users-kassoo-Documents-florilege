@@ -110,6 +110,16 @@ export const UI: Dict = {
   respDone: { fr: "Ce lien a déjà été utilisé.", en: "This link has already been used." },
   respInvalid: { fr: "Lien invalide ou expiré.", en: "Invalid or expired link." },
 
+  // Signature manager (cercle can_be_named) — consentement explicite
+  respSignTitle: { fr: "Signer votre regard ?", en: "Sign your view?" },
+  respSignBody: {
+    fr: "En tant que manager, vous pouvez accepter d'être cité·e nommément auprès de {name}. C'est facultatif : sans cela, votre réponse reste strictement anonyme.",
+    en: "As a manager, you may agree to be named to {name}. It's optional: otherwise your answer stays strictly anonymous.",
+  },
+  respSignPlaceholder: { fr: "Votre nom", en: "Your name" },
+  respSignConfirm: { fr: "Envoyer en étant cité·e", en: "Send, named" },
+  respSignSkip: { fr: "Rester anonyme", en: "Stay anonymous" },
+
   // 360 — débrief
   dbYou: { fr: "Vous", en: "You" },
   dbOthers: { fr: "Autres", en: "Others" },
@@ -127,6 +137,10 @@ export const UI: Dict = {
   dbWaiting: {
     fr: "Pas encore assez de réponses. Revenez quand vos cercles auront répondu.",
     en: "Not enough responses yet. Come back once your circles have answered.",
+  },
+  dbNamedManager: {
+    fr: "{name}, votre manager, a accepté d'être cité·e nommément.",
+    en: "{name}, your manager, agreed to be named.",
   },
 
   // Lettre de coaching (PDF via impression)

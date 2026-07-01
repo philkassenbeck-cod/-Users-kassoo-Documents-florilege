@@ -35,19 +35,24 @@ function respondentForceScore(force: FlorilegeForce, r: ObserverResponse): numbe
 /**
  * Compare l'auto-évaluation (selfScores: {forceId: score}) au regard des autres.
  * @param filterCircle si fourni, n'agrège que ce cercle (respecte le seuil d'anonymat).
+ * @param opts.bypassThreshold  n'applique PAS le seuil d'anonymat. À réserver au cas
+ *   du manager ayant explicitement consenti à être cité nommément (voir
+ *   `anonymity.named_manager_requires_consent`) : l'anonymat n'est alors plus en jeu.
  */
 export function computeGaps(
   data: FlorilegeData,
   selfScores: Record<string, number>,
   observers: ObserverResponse[],
-  filterCircle?: string
+  filterCircle?: string,
+  opts?: { bypassThreshold?: boolean }
 ): ForceGap[] {
   const { high_cut } = data.three_sixty.johari;
   const minN = data.three_sixty.anonymity.min_respondents_per_circle;
   const pool = filterCircle ? observers.filter((o) => o.circle === filterCircle) : observers;
 
-  // Seuil d'anonymat : trop peu de répondants → on n'affiche pas les moyennes.
-  const belowThreshold = pool.length < minN;
+  // Seuil d'anonymat : trop peu de répondants → on n'affiche pas les moyennes,
+  // sauf dérogation explicite (manager cité avec son consentement).
+  const belowThreshold = opts?.bypassThreshold ? false : pool.length < minN;
 
   return data.forces.map((f) => {
     const self = selfScores[f.id] ?? 0;

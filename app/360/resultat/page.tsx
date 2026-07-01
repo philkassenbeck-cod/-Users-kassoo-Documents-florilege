@@ -27,6 +27,7 @@ interface SubjectView {
   lang: Lang;
   selfScores: Record<string, number>;
   responses: ObserverResponse[];
+  namedManager: string | null;
 }
 
 function label(forceId: string, lang: Lang) {
@@ -86,12 +87,18 @@ function Debrief360Inner() {
   const allN = view?.responses.length ?? 0;
   const allVisible = allN >= minN;
 
+  const namedManager = view?.namedManager ?? null;
+  const managerCV = circleViews.find((c) => c.circleId === "manager");
+  // Exception au seuil : manager ayant consenti à être cité (anonymat sans objet).
+  const namedManagerActive = circle === "manager" && !!namedManager && (managerCV?.n ?? 0) > 0;
+
   const gaps = useMemo(() => {
     if (!view) return [] as ForceGap[];
-    return circle === "all"
-      ? computeGaps(data, view.selfScores, view.responses)
-      : computeGaps(data, view.selfScores, view.responses, circle);
-  }, [view, circle]);
+    if (circle === "all") return computeGaps(data, view.selfScores, view.responses);
+    return computeGaps(data, view.selfScores, view.responses, circle, {
+      bypassThreshold: namedManagerActive,
+    });
+  }, [view, circle, namedManagerActive]);
 
   if (state === "loading") {
     return (
@@ -124,6 +131,12 @@ function Debrief360Inner() {
     circle === "all"
       ? t("dbAll")
       : data.three_sixty.circles.find((c) => c.id === circle)?.label[lang] ?? "";
+  const otherName =
+    circle === "all"
+      ? t("dbOthers")
+      : namedManagerActive && namedManager
+        ? namedManager
+        : circleLabelActive;
 
   // Notes affichées : forces avec un « autres » calculable, triées par écart absolu.
   const notes = gaps
@@ -161,7 +174,10 @@ function Debrief360Inner() {
             </button>
             {data.three_sixty.circles.map((c) => {
               const cv = circleViews.find((x) => x.circleId === c.id);
-              const visible = !!cv?.visible;
+              const visible =
+                c.id === "manager"
+                  ? !!cv?.visible || (!!namedManager && (cv?.n ?? 0) > 0)
+                  : !!cv?.visible;
               return (
                 <button
                   key={c.id}
@@ -178,6 +194,11 @@ function Debrief360Inner() {
           <div style={{ fontSize: 11.5, color: C.muted, marginTop: 9, letterSpacing: ".03em" }}>
             {activeN} {t("dbResp")}
           </div>
+          {namedManagerActive && namedManager && (
+            <div style={{ fontSize: 11.5, color: C.blush, marginTop: 6, letterSpacing: ".02em" }}>
+              ✦ {t("dbNamedManager").replace(/\{name\}/g, namedManager)}
+            </div>
+          )}
 
           {nothingToShow ? (
             <p style={{ fontFamily: DISPLAY, fontStyle: "italic", color: C.porcelain, fontSize: 16, marginTop: 30, lineHeight: 1.5 }}>
@@ -247,7 +268,7 @@ function Debrief360Inner() {
                     <Bar
                       value={g.other ?? 0}
                       color={q.color}
-                      name={circle === "all" ? t("dbOthers") : circleLabelActive}
+                      name={otherName}
                       val={(g.other ?? 0).toFixed(1)}
                     />
                     <p style={{ fontFamily: DISPLAY, fontStyle: "italic", fontSize: 15, color: C.porcelain, marginTop: 13, marginBottom: 2, lineHeight: 1.4 }}>
