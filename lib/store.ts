@@ -1,6 +1,6 @@
-// lib/store.ts — persistance du 360 (couche APP, jamais dans core/).
-// Interface + adaptateur mémoire (défaut) + sélection Supabase par env.
-// RGPD/nLPD : données minimales, anonymes par défaut, le sujet peut tout supprimer.
+// lib/store.ts — persistance (couche APP, jamais dans core/).
+// Personnes (test self persisté) + 360 (invitations/réponses). Interface + mémoire + Supabase.
+// RGPD/nLPD : minimisation, la personne peut tout supprimer.
 
 import type { Lang, ObserverResponse } from "@core";
 import { SupabaseStore } from "./store-supabase";
@@ -8,7 +8,8 @@ import { SupabaseStore } from "./store-supabase";
 // ---------- Modèle ----------
 
 export interface SubjectInput {
-  name: string; // prénom du sujet, interpolé dans les items observateur ({name})
+  name: string; // prénom, interpolé dans les items observateur ({name})
+  email: string | null; // pour renvoyer le lien perso (peut être null)
   pronoun: string; // il | elle | iel | neutral
   lang: Lang;
   selfScores: Record<string, number>; // {forceId: score} issu de la passation self
@@ -30,31 +31,49 @@ export interface Invitation {
 
 export interface CircleRequest {
   circle: string;
-  count: number; // nombre de liens à générer pour ce cercle
+  count: number;
+}
+
+/** Résumé pour la liste admin. */
+export interface SubjectSummary {
+  id: string;
+  name: string;
+  email: string | null;
+  lang: Lang;
+  createdAt: number;
+  invitationCount: number;
+  responseCount: number;
 }
 
 export interface Store {
-  createSubject(input: SubjectInput, circles: CircleRequest[]): Promise<{ subject: Subject; invitations: Invitation[] }>;
+  /** Persiste une personne à la fin du test self. */
+  createPerson(input: SubjectInput): Promise<Subject>;
   getSubject(id: string): Promise<Subject | null>;
-  deleteSubject(id: string): Promise<void>; // supprime sujet + invitations + réponses (RGPD)
+  deleteSubject(id: string): Promise<void>; // supprime personne + invitations + réponses (RGPD)
+  /** Ajoute des liens répondants (360) à une personne existante. */
+  addInvitations(subjectId: string, circles: CircleRequest[]): Promise<Invitation[]>;
   listInvitations(subjectId: string): Promise<Invitation[]>;
   getInvitation(token: string): Promise<Invitation | null>;
   saveResponse(token: string, answers: Record<string, number>, authorName?: string | null): Promise<void>;
   listResponses(subjectId: string): Promise<ObserverResponse[]>;
-  /** Nom du manager s'il a consenti à être cité (cercle can_be_named), sinon null. */
   getNamedManager(subjectId: string): Promise<string | null>;
+  /** Liste toutes les personnes (admin). */
+  listSubjects(): Promise<SubjectSummary[]>;
+}
+
+function uid(prefix: string): string {
+  return prefix + globalThis.crypto.randomUUID().replace(/-/g, "");
 }
 
 // ---------- Adaptateur mémoire (dev / démo) ----------
-// Persisté sur globalThis pour survivre au hot-reload de Next en dev.
 
 interface MemDB {
   subjects: Map<string, Subject>;
-  invitations: Map<string, Invitation>; // clé = token
+  invitations: Map<string, Invitation>;
   responses: Map<
     string,
     { subjectId: string; circle: string; answers: Record<string, number>; authorName: string | null }
-  >; // clé = token
+  >;
 }
 
 function memdb(): MemDB {
@@ -65,31 +84,11 @@ function memdb(): MemDB {
   return g.__florilege_db;
 }
 
-function uid(prefix: string): string {
-  return prefix + globalThis.crypto.randomUUID().replace(/-/g, "");
-}
-
 class MemoryStore implements Store {
-  async createSubject(input: SubjectInput, circles: CircleRequest[]) {
-    const db = memdb();
+  async createPerson(input: SubjectInput): Promise<Subject> {
     const subject: Subject = { ...input, id: uid("s_"), createdAt: Date.now() };
-    db.subjects.set(subject.id, subject);
-    const invitations: Invitation[] = [];
-    for (const { circle, count } of circles) {
-      for (let i = 0; i < count; i++) {
-        const inv: Invitation = {
-          token: uid("i_"),
-          subjectId: subject.id,
-          circle,
-          consented: false,
-          responded: false,
-          createdAt: Date.now(),
-        };
-        db.invitations.set(inv.token, inv);
-        invitations.push(inv);
-      }
-    }
-    return { subject, invitations };
+    memdb().subjects.set(subject.id, subject);
+    return subject;
   }
 
   async getSubject(id: string) {
@@ -101,6 +100,26 @@ class MemoryStore implements Store {
     db.subjects.delete(id);
     for (const [tok, inv] of db.invitations) if (inv.subjectId === id) db.invitations.delete(tok);
     for (const [tok, r] of db.responses) if (r.subjectId === id) db.responses.delete(tok);
+  }
+
+  async addInvitations(subjectId: string, circles: CircleRequest[]): Promise<Invitation[]> {
+    const db = memdb();
+    const invitations: Invitation[] = [];
+    for (const { circle, count } of circles) {
+      for (let i = 0; i < count; i++) {
+        const inv: Invitation = {
+          token: uid("i_"),
+          subjectId,
+          circle,
+          consented: false,
+          responded: false,
+          createdAt: Date.now(),
+        };
+        db.invitations.set(inv.token, inv);
+        invitations.push(inv);
+      }
+    }
+    return invitations;
   }
 
   async listInvitations(subjectId: string) {
@@ -133,6 +152,23 @@ class MemoryStore implements Store {
     );
     return named?.authorName ?? null;
   }
+
+  async listSubjects(): Promise<SubjectSummary[]> {
+    const db = memdb();
+    const invs = [...db.invitations.values()];
+    const resp = [...db.responses.values()];
+    return [...db.subjects.values()]
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        lang: s.lang,
+        createdAt: s.createdAt,
+        invitationCount: invs.filter((i) => i.subjectId === s.id).length,
+        responseCount: resp.filter((r) => r.subjectId === s.id).length,
+      }));
+  }
 }
 
 // ---------- Sélection de l'adaptateur ----------
@@ -141,15 +177,8 @@ let singleton: Store | null = null;
 
 export function getStore(): Store {
   if (singleton) return singleton;
-  // Supabase si les clés serveur sont présentes (persistance réelle) ;
-  // sinon mémoire (dev/démo, non partagé entre instances serverless).
-  // Prérequis Supabase : avoir appliqué `supabase/schema.sql`.
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (url && key) {
-    singleton = new SupabaseStore(url, key);
-  } else {
-    singleton = new MemoryStore();
-  }
+  singleton = url && key ? new SupabaseStore(url, key) : new MemoryStore();
   return singleton;
 }

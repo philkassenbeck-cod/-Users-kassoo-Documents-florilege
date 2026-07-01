@@ -1,15 +1,26 @@
 // lib/store-supabase.ts — implémentation Supabase du contrat Store.
-// Server-only (utilise la service_role key). Appliquer d'abord supabase/schema.sql.
+// Server-only (service_role key). Appliquer d'abord supabase/schema.sql.
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { ObserverResponse } from "@core";
-import type { Store, Subject, SubjectInput, Invitation, CircleRequest } from "./store";
+import type {
+  Store,
+  Subject,
+  SubjectInput,
+  Invitation,
+  CircleRequest,
+  SubjectSummary,
+} from "./store";
 
 function uid(prefix: string): string {
   return prefix + globalThis.crypto.randomUUID().replace(/-/g, "");
 }
 
 type Row = Record<string, unknown>;
+
+function ts(v: unknown): number {
+  return v ? new Date(String(v)).getTime() : Date.now();
+}
 
 function mapInvitation(d: Row): Invitation {
   return {
@@ -18,7 +29,7 @@ function mapInvitation(d: Row): Invitation {
     circle: String(d.circle),
     consented: Boolean(d.consented),
     responded: Boolean(d.responded),
-    createdAt: d.created_at ? new Date(String(d.created_at)).getTime() : Date.now(),
+    createdAt: ts(d.created_at),
   };
 }
 
@@ -29,43 +40,18 @@ export class SupabaseStore implements Store {
     this.db = createClient(url, serviceKey, { auth: { persistSession: false } });
   }
 
-  async createSubject(input: SubjectInput, circles: CircleRequest[]) {
+  async createPerson(input: SubjectInput): Promise<Subject> {
     const subject: Subject = { ...input, id: uid("s_"), createdAt: Date.now() };
-    const { error: e1 } = await this.db.from("subjects").insert({
+    const { error } = await this.db.from("subjects").insert({
       id: subject.id,
       name: subject.name,
+      email: subject.email,
       pronoun: subject.pronoun,
       lang: subject.lang,
       self_scores: subject.selfScores,
     });
-    if (e1) throw new Error(e1.message);
-
-    const invitations: Invitation[] = [];
-    for (const { circle, count } of circles) {
-      for (let i = 0; i < count; i++) {
-        invitations.push({
-          token: uid("i_"),
-          subjectId: subject.id,
-          circle,
-          consented: false,
-          responded: false,
-          createdAt: Date.now(),
-        });
-      }
-    }
-    if (invitations.length) {
-      const { error: e2 } = await this.db.from("invitations").insert(
-        invitations.map((v) => ({
-          token: v.token,
-          subject_id: v.subjectId,
-          circle: v.circle,
-          consented: false,
-          responded: false,
-        }))
-      );
-      if (e2) throw new Error(e2.message);
-    }
-    return { subject, invitations };
+    if (error) throw new Error(error.message);
+    return subject;
   }
 
   async getSubject(id: string): Promise<Subject | null> {
@@ -75,17 +61,47 @@ export class SupabaseStore implements Store {
     return {
       id: String(d.id),
       name: String(d.name),
+      email: d.email ? String(d.email) : null,
       pronoun: String(d.pronoun),
       lang: d.lang === "en" ? "en" : "fr",
       selfScores: (d.self_scores ?? {}) as Record<string, number>,
-      createdAt: d.created_at ? new Date(String(d.created_at)).getTime() : Date.now(),
+      createdAt: ts(d.created_at),
     };
   }
 
   async deleteSubject(id: string): Promise<void> {
-    // Les FK `on delete cascade` effacent invitations + responses (RGPD).
+    // FK on delete cascade → invitations + responses effacées (RGPD).
     const { error } = await this.db.from("subjects").delete().eq("id", id);
     if (error) throw new Error(error.message);
+  }
+
+  async addInvitations(subjectId: string, circles: CircleRequest[]): Promise<Invitation[]> {
+    const invitations: Invitation[] = [];
+    for (const { circle, count } of circles) {
+      for (let i = 0; i < count; i++) {
+        invitations.push({
+          token: uid("i_"),
+          subjectId,
+          circle,
+          consented: false,
+          responded: false,
+          createdAt: Date.now(),
+        });
+      }
+    }
+    if (invitations.length) {
+      const { error } = await this.db.from("invitations").insert(
+        invitations.map((v) => ({
+          token: v.token,
+          subject_id: v.subjectId,
+          circle: v.circle,
+          consented: false,
+          responded: false,
+        }))
+      );
+      if (error) throw new Error(error.message);
+    }
+    return invitations;
   }
 
   async listInvitations(subjectId: string): Promise<Invitation[]> {
@@ -137,4 +153,33 @@ export class SupabaseStore implements Store {
     const name = data ? (data as Row).author_name : null;
     return name ? String(name) : null;
   }
+
+  async listSubjects(): Promise<SubjectSummary[]> {
+    const { data: subjects } = await this.db
+      .from("subjects")
+      .select("*")
+      .order("created_at", { ascending: false });
+    const { data: invs } = await this.db.from("invitations").select("subject_id");
+    const { data: resp } = await this.db.from("responses").select("subject_id");
+    const invBy = tally((invs ?? []) as Row[]);
+    const respBy = tally((resp ?? []) as Row[]);
+    return ((subjects ?? []) as Row[]).map((d) => ({
+      id: String(d.id),
+      name: String(d.name),
+      email: d.email ? String(d.email) : null,
+      lang: d.lang === "en" ? "en" : "fr",
+      createdAt: ts(d.created_at),
+      invitationCount: invBy[String(d.id)] ?? 0,
+      responseCount: respBy[String(d.id)] ?? 0,
+    }));
+  }
+}
+
+function tally(rows: Row[]): Record<string, number> {
+  const out: Record<string, number> = {};
+  for (const r of rows) {
+    const k = String(r.subject_id);
+    out[k] = (out[k] ?? 0) + 1;
+  }
+  return out;
 }

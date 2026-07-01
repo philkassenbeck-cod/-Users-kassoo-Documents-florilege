@@ -3,19 +3,19 @@
 // permet la suppression totale (RGPD — le sujet maîtrise ses données).
 
 import { getStore } from "@/lib/store";
-import type { CircleRequest, SubjectInput } from "@/lib/store";
+import type { CircleRequest } from "@/lib/store";
 
+// 360 : ajoute des liens répondants à une personne DÉJÀ enregistrée (test self).
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
-  if (!body || typeof body.name !== "string" || !body.name.trim()) {
-    return Response.json({ error: "name requis" }, { status: 400 });
+  const subjectId = body?.subjectId ? String(body.subjectId) : null;
+  if (!subjectId) {
+    return Response.json({ error: "subjectId requis" }, { status: 400 });
   }
-  const input: SubjectInput = {
-    name: String(body.name).trim().slice(0, 60),
-    pronoun: String(body.pronoun ?? "neutral"),
-    lang: body.lang === "en" ? "en" : "fr",
-    selfScores: body.selfScores ?? {},
-  };
+  const store = getStore();
+  const subject = await store.getSubject(subjectId);
+  if (!subject) return Response.json({ error: "personne introuvable" }, { status: 404 });
+
   const circles: CircleRequest[] = Array.isArray(body.circles)
     ? body.circles
         .map((c: { circle: string; count: number }) => ({
@@ -25,10 +25,9 @@ export async function POST(req: Request) {
         .filter((c: CircleRequest) => c.count > 0)
     : [];
 
-  const store = getStore();
-  const { subject, invitations } = await store.createSubject(input, circles);
+  const invitations = await store.addInvitations(subjectId, circles);
   return Response.json({
-    subjectId: subject.id,
+    subjectId,
     invitations: invitations.map((i) => ({ token: i.token, circle: i.circle })),
   });
 }

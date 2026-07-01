@@ -38,6 +38,18 @@ export const UI: Dict = {
     fr: "8 minutes suffisent. Voici ce qu'elles ont dit de vous.",
     en: "Eight minutes was enough. Here's what they said about you.",
   },
+
+  // Gate de révélation (prénom + email → persistance + envoi du lien)
+  gateTitle: { fr: "Révélez et conservez votre florilège", en: "Reveal and keep your florilège" },
+  gateBody: {
+    fr: "Entrez votre prénom et votre email : on vous envoie votre lien personnel pour y revenir quand vous voulez — et lancer le 360 plus tard.",
+    en: "Enter your first name and email: we'll send you a personal link to come back anytime — and launch the 360 later.",
+  },
+  gateName: { fr: "Prénom", en: "First name" },
+  gateEmail: { fr: "Email", en: "Email" },
+  gateSending: { fr: "Un instant…", en: "One moment…" },
+  gateEmailSent: { fr: "Lien envoyé à", en: "Link sent to" },
+  gateKeepLink: { fr: "Votre lien à conserver", en: "Your link to keep" },
   notes: {
     fr: "Note de tête|Note de cœur|Note de fond",
     en: "Top note|Heart note|Base note",
@@ -166,6 +178,24 @@ export const UI: Dict = {
     fr: "Passez d'abord le diagnostic : la lettre se compose à partir de votre florilège.",
     en: "Take the diagnostic first: the letter is composed from your florilège.",
   },
+
+  // 360 : besoin d'une personne enregistrée
+  need360: {
+    fr: "Passez d'abord votre diagnostic et enregistrez votre florilège : le 360 s'y rattache.",
+    en: "Take your diagnostic and save your florilège first: the 360 attaches to it.",
+  },
+
+  // Admin
+  adminTitle: { fr: "Florilège · Admin", en: "Florilège · Admin" },
+  adminPassword: { fr: "Mot de passe", en: "Password" },
+  adminLogin: { fr: "Entrer", en: "Enter" },
+  adminWrong: { fr: "Mot de passe invalide.", en: "Invalid password." },
+  adminEmpty: { fr: "Aucune personne pour l'instant.", en: "No one yet." },
+  adminColName: { fr: "Personne", en: "Person" },
+  adminColDate: { fr: "Date", en: "Date" },
+  adminCol360: { fr: "360 (liens · réponses)", en: "360 (links · responses)" },
+  adminView: { fr: "Florilège", en: "Florilège" },
+  admin360: { fr: "Débrief 360", en: "360 debrief" },
 };
 
 /** Résout un libellé d'interface. */

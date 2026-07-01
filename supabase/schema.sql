@@ -5,11 +5,14 @@
 create table if not exists subjects (
   id          text primary key,
   name        text not null,
+  email       text,                     -- pour renvoyer le lien perso
   pronoun     text not null default 'neutral',
   lang        text not null default 'fr',
   self_scores jsonb not null,           -- { forceId: score }
   created_at  timestamptz not null default now()
 );
+-- Si la table subjects existe déjà sans email :
+alter table subjects add column if not exists email text;
 
 create table if not exists invitations (
   token       text primary key,
