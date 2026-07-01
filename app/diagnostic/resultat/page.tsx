@@ -148,7 +148,10 @@ export default function Resultat() {
                     >
                       {familyLabel(data, f.family, lang)}
                     </div>
-                    <div style={{ margin: "22px 0 0", height: 1, background: C.line }} />
+                    <p style={{ fontSize: 13, lineHeight: 1.5, color: C.muted, marginTop: 14 }}>
+                      {copy?.definition[lang]}
+                    </p>
+                    <div style={{ margin: "18px 0 0", height: 1, background: C.line }} />
                     <p style={{ fontFamily: DISPLAY, fontSize: 21, lineHeight: 1.3, marginTop: 20, color: C.porcelain }}>
                       « {copy?.phrase[lang]} »
                     </p>

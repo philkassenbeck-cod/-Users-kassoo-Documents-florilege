@@ -169,6 +169,7 @@ function LetterInner() {
                   {familyLabel(data, f.family, lang)}
                 </span>
               </div>
+              <p style={{ fontSize: 13.5, lineHeight: 1.55, marginTop: 6, color: MUTED }}>{copy?.definition[lang]}</p>
               <p className="letter-serif" style={{ fontSize: 18, lineHeight: 1.4, marginTop: 8 }}>« {copy?.phrase[lang]} »</p>
               <p style={{ fontSize: 14, lineHeight: 1.6, marginTop: 6, color: "rgba(26,26,40,0.78)" }}>
                 <strong style={{ color: BRASS, fontWeight: 600 }}>{UI.letterTeam[lang]} · </strong>
