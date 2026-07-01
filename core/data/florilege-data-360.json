@@ -1,0 +1,870 @@
+{
+  "meta": {
+    "name": "Florilège — Diagnostic de forces Optimup",
+    "version": "0.1.0-candidate",
+    "author": "Optimup / SLP FLORILÈGE",
+    "positioning": "Diagnostic de forces fondé sur des construits validés (Big Five / IPIP). Outil de développement, non psychométriquement validé à ce stade.",
+    "estimated_minutes": 8,
+    "languages": [
+      "fr",
+      "en"
+    ],
+    "scale": {
+      "min": 1,
+      "max": 5,
+      "labels": {
+        "fr": [
+          "Pas du tout d'accord",
+          "Plutôt pas d'accord",
+          "Neutre",
+          "Plutôt d'accord",
+          "Tout à fait d'accord"
+        ],
+        "en": [
+          "Strongly disagree",
+          "Disagree",
+          "Neutral",
+          "Agree",
+          "Strongly agree"
+        ]
+      }
+    },
+    "scoring": {
+      "items_per_force": 6,
+      "reverse_recode": "6 - x",
+      "force_score": "mean of 6 recoded items",
+      "florilege_size": 3,
+      "note": "Les 3 forces au score le plus élevé constituent le florilège de la personne."
+    },
+    "config": {
+      "compassion_label_candidates": {
+        "fr": [
+          "Accord",
+          "Bienveillance"
+        ],
+        "en": [
+          "Attunement",
+          "Care"
+        ],
+        "note": "Deux libellés candidats en parallèle pour la force relier_compassion. Choisir plus tard (ou A/B tester). L'identifiant reste stable."
+      }
+    }
+  },
+  "families": [
+    {
+      "id": "accomplir",
+      "label": {
+        "fr": "Accomplir",
+        "en": "Deliver"
+      },
+      "big_five": "Conscienciosité",
+      "big_five_en": "Conscientiousness"
+    },
+    {
+      "id": "rayonner",
+      "label": {
+        "fr": "Rayonner",
+        "en": "Radiate"
+      },
+      "big_five": "Extraversion",
+      "big_five_en": "Extraversion"
+    },
+    {
+      "id": "relier",
+      "label": {
+        "fr": "Relier",
+        "en": "Connect"
+      },
+      "big_five": "Agréabilité",
+      "big_five_en": "Agreeableness"
+    },
+    {
+      "id": "imaginer",
+      "label": {
+        "fr": "Imaginer",
+        "en": "Imagine"
+      },
+      "big_five": "Ouverture",
+      "big_five_en": "Openness"
+    }
+  ],
+  "forces": [
+    {
+      "id": "accomplir_industrie",
+      "family": "accomplir",
+      "label": {
+        "fr": "Ténacité",
+        "en": "Drive"
+      },
+      "facet": {
+        "fr": "Assiduité / accomplissement",
+        "en": "Industriousness / achievement"
+      },
+      "items": [
+        {
+          "id": "accomplir_industrie_1",
+          "reverse": false,
+          "text": {
+            "fr": "Je vais au bout de ce que je commence, même quand cela devient difficile.",
+            "en": "I finish what I start, even when it becomes difficult."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} va au bout de ses engagements, même quand cela devient difficile.",
+            "en": "{name} finishes what they start, even when it gets hard."
+          }
+        },
+        {
+          "id": "accomplir_industrie_2",
+          "reverse": false,
+          "text": {
+            "fr": "Je me fixe des objectifs exigeants et je m'y tiens.",
+            "en": "I set demanding goals and hold myself to them."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} se fixe des objectifs exigeants et s'y tient.",
+            "en": "{name} sets demanding goals and holds to them."
+          }
+        },
+        {
+          "id": "accomplir_industrie_3",
+          "reverse": false,
+          "text": {
+            "fr": "Face à un obstacle, je cherche un chemin plutôt que de renoncer.",
+            "en": "Facing an obstacle, I look for a way through rather than give up."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_industrie_4",
+          "reverse": false,
+          "text": {
+            "fr": "On peut compter sur moi pour tenir un engagement dans la durée.",
+            "en": "People can count on me to sustain a commitment over time."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_industrie_5",
+          "reverse": true,
+          "text": {
+            "fr": "Je laisse souvent des projets inachevés.",
+            "en": "I often leave projects unfinished."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_industrie_6",
+          "reverse": true,
+          "text": {
+            "fr": "Quand l'effort se prolonge, je perds vite mon élan.",
+            "en": "When effort drags on, I quickly lose momentum."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "accomplir_ordre",
+      "family": "accomplir",
+      "label": {
+        "fr": "Rigueur",
+        "en": "Discipline"
+      },
+      "facet": {
+        "fr": "Ordre / autodiscipline",
+        "en": "Orderliness / self-discipline"
+      },
+      "items": [
+        {
+          "id": "accomplir_ordre_1",
+          "reverse": false,
+          "text": {
+            "fr": "J'organise mon travail avec méthode et anticipation.",
+            "en": "I organise my work methodically and plan ahead."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} organise son travail avec méthode et anticipation.",
+            "en": "{name} organises their work methodically and plans ahead."
+          }
+        },
+        {
+          "id": "accomplir_ordre_2",
+          "reverse": false,
+          "text": {
+            "fr": "Je tiens mes priorités et mes dossiers clairement en ordre.",
+            "en": "I keep my priorities and files clearly in order."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} tient ses priorités et ses dossiers clairement en ordre.",
+            "en": "{name} keeps their priorities and files clearly in order."
+          }
+        },
+        {
+          "id": "accomplir_ordre_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je prépare soigneusement avant d'agir.",
+            "en": "I prepare carefully before acting."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_ordre_4",
+          "reverse": false,
+          "text": {
+            "fr": "Je respecte les délais que je me fixe.",
+            "en": "I meet the deadlines I set for myself."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_ordre_5",
+          "reverse": true,
+          "text": {
+            "fr": "Je fonctionne surtout dans l'improvisation.",
+            "en": "I mostly operate by improvising."
+          },
+          "in360": false
+        },
+        {
+          "id": "accomplir_ordre_6",
+          "reverse": true,
+          "text": {
+            "fr": "Il m'arrive souvent d'égarer des informations ou de perdre le fil.",
+            "en": "I often misplace information or lose track of things."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "rayonner_assertivite",
+      "family": "rayonner",
+      "label": {
+        "fr": "Audace",
+        "en": "Boldness"
+      },
+      "facet": {
+        "fr": "Assertivité / initiative",
+        "en": "Assertiveness / activity"
+      },
+      "items": [
+        {
+          "id": "rayonner_assertivite_1",
+          "reverse": false,
+          "text": {
+            "fr": "Je prends l'initiative sans attendre qu'on me le demande.",
+            "en": "I take the initiative without waiting to be asked."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} prend l'initiative sans attendre qu'on le lui demande.",
+            "en": "{name} takes initiative without waiting to be asked."
+          }
+        },
+        {
+          "id": "rayonner_assertivite_2",
+          "reverse": false,
+          "text": {
+            "fr": "J'ose défendre mon point de vue, même face à l'opposition.",
+            "en": "I dare to defend my viewpoint, even against opposition."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} ose défendre son point de vue, même face à l'opposition.",
+            "en": "{name} dares to defend their viewpoint, even against opposition."
+          }
+        },
+        {
+          "id": "rayonner_assertivite_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je décide et j'avance, même dans l'incertitude.",
+            "en": "I decide and move forward, even amid uncertainty."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_assertivite_4",
+          "reverse": false,
+          "text": {
+            "fr": "Je prends volontiers le lead dans un groupe.",
+            "en": "I readily take the lead in a group."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_assertivite_5",
+          "reverse": true,
+          "text": {
+            "fr": "J'attends souvent que d'autres tranchent à ma place.",
+            "en": "I often wait for others to decide in my place."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_assertivite_6",
+          "reverse": true,
+          "text": {
+            "fr": "Je préfère rester en retrait plutôt que de m'imposer.",
+            "en": "I prefer to stay in the background rather than assert myself."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "rayonner_enthousiasme",
+      "family": "rayonner",
+      "label": {
+        "fr": "Présence",
+        "en": "Presence"
+      },
+      "facet": {
+        "fr": "Enthousiasme / chaleur",
+        "en": "Enthusiasm / warmth"
+      },
+      "items": [
+        {
+          "id": "rayonner_enthousiasme_1",
+          "reverse": false,
+          "text": {
+            "fr": "Je communique facilement mon énergie aux autres.",
+            "en": "I easily convey my energy to others."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} communique facilement son énergie aux autres.",
+            "en": "{name} easily conveys their energy to others."
+          }
+        },
+        {
+          "id": "rayonner_enthousiasme_2",
+          "reverse": false,
+          "text": {
+            "fr": "Ma présence se remarque dans un groupe.",
+            "en": "My presence is felt in a group."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "La présence de {name} se remarque dans un groupe.",
+            "en": "{name}'s presence is felt in a group."
+          }
+        },
+        {
+          "id": "rayonner_enthousiasme_3",
+          "reverse": false,
+          "text": {
+            "fr": "J'aime aller vers les gens et créer du lien rapidement.",
+            "en": "I like reaching out to people and building rapport quickly."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_enthousiasme_4",
+          "reverse": false,
+          "text": {
+            "fr": "Je sais rendre une idée vivante et engageante.",
+            "en": "I can make an idea vivid and engaging."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_enthousiasme_5",
+          "reverse": true,
+          "text": {
+            "fr": "Je me sens vite épuisé par les interactions de groupe.",
+            "en": "Group interactions quickly drain me."
+          },
+          "in360": false
+        },
+        {
+          "id": "rayonner_enthousiasme_6",
+          "reverse": true,
+          "text": {
+            "fr": "On me perçoit plutôt comme discret et effacé.",
+            "en": "I'm generally seen as quiet and unobtrusive."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "relier_compassion",
+      "family": "relier",
+      "label": {
+        "fr": "Accord",
+        "en": "Attunement",
+        "alt_fr": "Bienveillance",
+        "alt_en": "Care"
+      },
+      "facet": {
+        "fr": "Compassion",
+        "en": "Compassion"
+      },
+      "items": [
+        {
+          "id": "relier_compassion_1",
+          "reverse": false,
+          "text": {
+            "fr": "Je perçois vite ce que ressent la personne en face de moi.",
+            "en": "I quickly sense what the person in front of me feels."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} perçoit vite ce que ressent la personne en face.",
+            "en": "{name} quickly senses what the person in front of them feels."
+          }
+        },
+        {
+          "id": "relier_compassion_2",
+          "reverse": false,
+          "text": {
+            "fr": "Les émotions des autres me touchent et je m'y ajuste.",
+            "en": "Others' emotions reach me and I adjust to them."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "Les émotions des autres touchent {name}, qui s'y ajuste.",
+            "en": "Others' emotions reach {name}, who adjusts to them."
+          }
+        },
+        {
+          "id": "relier_compassion_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je prends le temps de comprendre l'autre avant de réagir.",
+            "en": "I take time to understand the other before reacting."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_compassion_4",
+          "reverse": false,
+          "text": {
+            "fr": "On me confie facilement des choses personnelles.",
+            "en": "People open up to me easily."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_compassion_5",
+          "reverse": true,
+          "text": {
+            "fr": "Les états d'âme des autres me laissent assez indifférent.",
+            "en": "Others' moods leave me fairly indifferent."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_compassion_6",
+          "reverse": true,
+          "text": {
+            "fr": "J'ai du mal à deviner ce que ressentent les gens.",
+            "en": "I find it hard to read how people feel."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "relier_politesse",
+      "family": "relier",
+      "label": {
+        "fr": "Liant",
+        "en": "Rapport"
+      },
+      "facet": {
+        "fr": "Coopération / égards",
+        "en": "Cooperation / politeness"
+      },
+      "items": [
+        {
+          "id": "relier_politesse_1",
+          "reverse": false,
+          "text": {
+            "fr": "Je cherche l'accord et la coopération plutôt que le rapport de force.",
+            "en": "I seek agreement and cooperation over power struggles."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} cherche l'accord et la coopération plutôt que le rapport de force.",
+            "en": "{name} seeks agreement and cooperation over power struggles."
+          }
+        },
+        {
+          "id": "relier_politesse_2",
+          "reverse": false,
+          "text": {
+            "fr": "Je veille à préserver l'harmonie dans une équipe.",
+            "en": "I work to preserve harmony in a team."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} veille à préserver l'harmonie dans une équipe.",
+            "en": "{name} works to preserve harmony in a team."
+          }
+        },
+        {
+          "id": "relier_politesse_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je tiens compte des besoins de chacun dans mes décisions.",
+            "en": "I take everyone's needs into account in my decisions."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_politesse_4",
+          "reverse": false,
+          "text": {
+            "fr": "Je désamorce volontiers les tensions entre personnes.",
+            "en": "I willingly defuse tensions between people."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_politesse_5",
+          "reverse": true,
+          "text": {
+            "fr": "J'entre facilement en confrontation quand je ne suis pas d'accord.",
+            "en": "I readily get into confrontation when I disagree."
+          },
+          "in360": false
+        },
+        {
+          "id": "relier_politesse_6",
+          "reverse": true,
+          "text": {
+            "fr": "Je me soucie peu de l'effet de mes mots sur les autres.",
+            "en": "I care little about the effect of my words on others."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "imaginer_intellect",
+      "family": "imaginer",
+      "label": {
+        "fr": "Vision",
+        "en": "Vision"
+      },
+      "facet": {
+        "fr": "Intellect / idées",
+        "en": "Intellect / ideas"
+      },
+      "items": [
+        {
+          "id": "imaginer_intellect_1",
+          "reverse": false,
+          "text": {
+            "fr": "J'aime penser l'avenir et imaginer ce qui pourrait être.",
+            "en": "I like thinking about the future and imagining what could be."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} aime penser l'avenir et imaginer ce qui pourrait être.",
+            "en": "{name} likes thinking about the future and imagining what could be."
+          }
+        },
+        {
+          "id": "imaginer_intellect_2",
+          "reverse": false,
+          "text": {
+            "fr": "Je relie facilement des idées venues d'horizons différents.",
+            "en": "I easily connect ideas from different fields."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} relie facilement des idées venues d'horizons différents.",
+            "en": "{name} easily connects ideas from different fields."
+          }
+        },
+        {
+          "id": "imaginer_intellect_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je suis attiré par les problèmes complexes et abstraits.",
+            "en": "I'm drawn to complex, abstract problems."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_intellect_4",
+          "reverse": false,
+          "text": {
+            "fr": "Je propose souvent des perspectives nouvelles.",
+            "en": "I often offer fresh perspectives."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_intellect_5",
+          "reverse": true,
+          "text": {
+            "fr": "Je préfère m'en tenir au concret et à l'immédiat.",
+            "en": "I'd rather stick to the concrete and the immediate."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_intellect_6",
+          "reverse": true,
+          "text": {
+            "fr": "Les réflexions trop conceptuelles me lassent.",
+            "en": "Overly conceptual thinking tires me."
+          },
+          "in360": false
+        }
+      ]
+    },
+    {
+      "id": "imaginer_ouverture",
+      "family": "imaginer",
+      "label": {
+        "fr": "Curiosité",
+        "en": "Curiosity"
+      },
+      "facet": {
+        "fr": "Ouverture / idées",
+        "en": "Openness / ideas"
+      },
+      "items": [
+        {
+          "id": "imaginer_ouverture_1",
+          "reverse": false,
+          "text": {
+            "fr": "J'ai besoin d'apprendre et de découvrir en permanence.",
+            "en": "I have a constant need to learn and discover."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} a besoin d'apprendre et de découvrir en permanence.",
+            "en": "{name} has a constant need to learn and discover."
+          }
+        },
+        {
+          "id": "imaginer_ouverture_2",
+          "reverse": false,
+          "text": {
+            "fr": "Je m'intéresse à une grande variété de sujets.",
+            "en": "I'm interested in a wide range of subjects."
+          },
+          "in360": true,
+          "observer": {
+            "fr": "{name} s'intéresse à une grande variété de sujets.",
+            "en": "{name} is interested in a wide range of subjects."
+          }
+        },
+        {
+          "id": "imaginer_ouverture_3",
+          "reverse": false,
+          "text": {
+            "fr": "Je remets volontiers en question mes propres certitudes.",
+            "en": "I willingly question my own certainties."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_ouverture_4",
+          "reverse": false,
+          "text": {
+            "fr": "La nouveauté et le changement me stimulent.",
+            "en": "Novelty and change energise me."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_ouverture_5",
+          "reverse": true,
+          "text": {
+            "fr": "Je me contente volontiers de ce que je connais déjà.",
+            "en": "I'm quite content with what I already know."
+          },
+          "in360": false
+        },
+        {
+          "id": "imaginer_ouverture_6",
+          "reverse": true,
+          "text": {
+            "fr": "Je me méfie de ce qui sort de mes habitudes.",
+            "en": "I'm wary of anything outside my habits."
+          },
+          "in360": false
+        }
+      ]
+    }
+  ],
+  "origin_layer": {
+    "disclaimer": {
+      "fr": "Ce n'est ni une loi ni un diagnostic. Nos forces ont de multiples origines (tempérament, culture, rencontres). C'est une grille de relecture, à manier avec bienveillance : regarder ses forces avec compassion — elles sont souvent nées de ce dont on a eu besoin.",
+      "en": "This is neither a law nor a diagnosis. Our strengths have many origins (temperament, culture, encounters). It's a lens for gentle re-reading: looking at your strengths with compassion — they were often born of what you once needed."
+    },
+    "by_family": {
+      "accomplir": {
+        "reading": {
+          "fr": "Cette famille de forces naît souvent d'un environnement où il fallait faire ses preuves pour être reconnu. Apprendre à performer, tenir, réussir a pu être une belle manière de trouver sa place.",
+          "en": "This family of strengths often grows where you had to prove yourself to be recognised. Learning to perform, persist and succeed may have been a fine way to find your place."
+        },
+        "prompt": {
+          "fr": "Enfant, dans quels moments réussir te faisait-il te sentir vu ?",
+          "en": "As a child, in what moments did succeeding make you feel seen?"
+        }
+      },
+      "rayonner": {
+        "reading": {
+          "fr": "Ces forces se sont parfois construites dans une part de solitude : aller vers l'autre, exister dans le lien, se faire une place par sa présence.",
+          "en": "These strengths sometimes formed amid a measure of solitude: reaching out, existing through connection, making a place through presence."
+        },
+        "prompt": {
+          "fr": "Quand as-tu appris qu'il fallait aller vers les autres pour être relié ?",
+          "en": "When did you learn that you had to reach out to others to feel connected?"
+        }
+      },
+      "relier": {
+        "reading": {
+          "fr": "Cette famille grandit souvent là où le lien a été précieux, voire salvateur : tisser, apaiser, préserver la relation a pu devenir une seconde nature.",
+          "en": "This family often grows where connection was precious, even saving: weaving, soothing and preserving relationships may have become second nature."
+        },
+        "prompt": {
+          "fr": "À quel moment prendre soin du lien t'a-t-il apporté de la sécurité ?",
+          "en": "When did caring for the bond bring you a sense of safety?"
+        }
+      },
+      "imaginer": {
+        "reading": {
+          "fr": "Ces forces trouvent parfois leur source dans la pensée comme refuge : comprendre, analyser, anticiper pour se sentir en sécurité dans un monde incertain.",
+          "en": "These strengths sometimes stem from thought as refuge: understanding, analysing and anticipating to feel safe in an uncertain world."
+        },
+        "prompt": {
+          "fr": "Quand penser ou comprendre est-il devenu, pour toi, un abri ?",
+          "en": "When did thinking or understanding become, for you, a shelter?"
+        }
+      }
+    }
+  },
+  "three_sixty": {
+    "observer_items_per_force": 2,
+    "observer_form_length": 16,
+    "estimated_seconds": 60,
+    "subject_pronoun": {
+      "options": [
+        "il",
+        "elle",
+        "iel",
+        "neutral"
+      ],
+      "default": "neutral",
+      "note": "Fixé une fois à la création. Les items observateur sont des gabarits avec {name}; les possessifs français (son/ses) sont déjà neutres en genre."
+    },
+    "circles": [
+      {
+        "id": "manager",
+        "label": {
+          "fr": "Mon manager",
+          "en": "My manager"
+        },
+        "can_be_named": true
+      },
+      {
+        "id": "peers",
+        "label": {
+          "fr": "Mes pairs / collègues",
+          "en": "My peers / colleagues"
+        },
+        "can_be_named": false
+      },
+      {
+        "id": "team",
+        "label": {
+          "fr": "Mon équipe",
+          "en": "My team"
+        },
+        "can_be_named": false
+      },
+      {
+        "id": "close",
+        "label": {
+          "fr": "Mes proches",
+          "en": "My close circle"
+        },
+        "can_be_named": false
+      }
+    ],
+    "anonymity": {
+      "min_respondents_per_circle": 3,
+      "below_threshold": "Ne pas afficher le cercle séparément; agréger dans 'tous les autres' seulement si le total le permet.",
+      "named_manager_requires_consent": true,
+      "default": "Tout anonyme sauf consentement explicite d'être cité."
+    },
+    "reporting": {
+      "count_vs_percent": {
+        "percent_threshold": 8,
+        "rule": "En dessous de 8 répondants, exprimer en compte ('4 sur 5'), jamais en pourcentage.",
+        "high_cut": 3.5
+      }
+    },
+    "johari": {
+      "high_cut": 3.5,
+      "gap_significant": 0.7,
+      "quadrants": {
+        "shared_signature": {
+          "label": {
+            "fr": "Signature partagée",
+            "en": "Shared signature"
+          },
+          "rule": "soi haut · autres haut",
+          "line": {
+            "fr": "Sur {force}, vous et votre entourage êtes d'accord — c'est une signature assumée.",
+            "en": "On {force}, you and those around you agree — an owned signature."
+          }
+        },
+        "positive_blind_spot": {
+          "label": {
+            "fr": "Pépite (angle mort positif)",
+            "en": "Hidden gem (positive blind spot)"
+          },
+          "rule": "soi bas · autres haut",
+          "line": {
+            "fr": "Les autres voient en vous une force que vous sous-estimez : {force}. Le cadeau du regard extérieur.",
+            "en": "Others see a strength you underrate: {force}. The gift of the outside view."
+          }
+        },
+        "secret_garden": {
+          "label": {
+            "fr": "Jardin secret",
+            "en": "Secret garden"
+          },
+          "rule": "soi haut · autres bas",
+          "line": {
+            "fr": "Vous ressentez {force}, mais elle ne se voit pas encore : un écart d'incarnation à travailler.",
+            "en": "You feel {force}, but it doesn't yet show: a gap between having it and showing it."
+          }
+        },
+        "dormant": {
+          "label": {
+            "fr": "En veille",
+            "en": "Dormant"
+          },
+          "rule": "soi bas · autres bas",
+          "line": {
+            "fr": "{force} reste en veille aujourd'hui — hors de votre florilège.",
+            "en": "{force} is dormant for now — outside your florilège."
+          }
+        }
+      }
+    },
+    "privacy": {
+      "consent_on_open": true,
+      "data_minimization": true,
+      "subject_controls_invites": true,
+      "subject_can_delete_all": true,
+      "note": "RGPD / nLPD : consentement à l'ouverture du lien, stockage minimal, seuil d'anonymat strict, agrégation seule sous le seuil."
+    }
+  }
+}
