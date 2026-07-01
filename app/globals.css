@@ -1,0 +1,244 @@
+/* app/globals.css — charte Optimup, classes partagées.
+   Palette et animations extraites des deux écrans .jsx de référence. */
+
+:root {
+  --ink: #1a1a28;
+  --ink2: #232338;
+  --panel: #20202f;
+  --brass: #c9a45c;
+  --brass-soft: #e3c892;
+  --blush: #e4a98f;
+  --violet: #b49bc8;
+  --porcelain: #f3ece1;
+  --muted: #9a93a8;
+  --line: rgba(243, 236, 225, 0.14);
+  --display: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--ink);
+  color: var(--porcelain);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Primitives ─────────────────────────────────────────── */
+.fl-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 40px 22px 56px;
+  position: relative;
+}
+.fl-btn {
+  cursor: pointer;
+  border: none;
+  font-family: var(--sans);
+  transition: all 0.25s ease;
+}
+.fl-lang {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+}
+.fl-lang:hover {
+  color: var(--porcelain);
+  border-color: var(--brass);
+}
+.fl-hint {
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── CTA / boutons pleins ───────────────────────────────── */
+.fl-reveal {
+  background: var(--brass);
+  color: var(--ink);
+  padding: 15px 30px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 30px rgba(201, 164, 92, 0.28);
+}
+.fl-reveal:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(201, 164, 92, 0.4);
+}
+
+/* ── Débrief self : les trois notes (cartes recto/verso) ─── */
+.fl-notes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+@media (max-width: 760px) {
+  .fl-notes {
+    grid-template-columns: 1fr;
+  }
+}
+.fl-card {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: linear-gradient(165deg, var(--ink2), var(--panel));
+  min-height: 300px;
+  padding: 22px 22px 20px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s;
+}
+.fl-card:hover {
+  border-color: rgba(201, 164, 92, 0.55);
+  transform: translateY(-3px);
+}
+.fl-face {
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.fl-back {
+  position: absolute;
+  inset: 22px;
+  opacity: 0;
+  transform: rotateX(8deg) translateY(8px);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+.fl-card.flip .fl-front {
+  opacity: 0;
+  transform: rotateX(-8deg) translateY(-8px);
+  pointer-events: none;
+}
+.fl-card.flip .fl-back {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* ── Barres (constellation + comparaisons 360) ──────────── */
+.fl-track {
+  flex: 1;
+  height: 7px;
+  background: rgba(243, 236, 225, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.fl-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transform-origin: left;
+  animation: flgrow 1s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+/* ── Chips (sélecteur de cercle 360, réutilisable) ──────── */
+.fl-chip {
+  padding: 7px 15px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  letter-spacing: 0.03em;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+.fl-chip.on {
+  background: var(--brass);
+  color: var(--ink);
+  border-color: var(--brass);
+  font-weight: 600;
+}
+.fl-chip.lock {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Likert (passation) ─────────────────────────────────── */
+.fl-likert {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.fl-dot {
+  min-width: 96px;
+  flex: 1 1 96px;
+  max-width: 190px;
+  padding: 14px 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: linear-gradient(165deg, var(--ink2), var(--panel));
+  color: var(--porcelain);
+  font-size: 13.5px;
+  line-height: 1.3;
+  text-align: center;
+  transition: all 0.18s ease;
+}
+.fl-dot:hover {
+  border-color: rgba(201, 164, 92, 0.55);
+  transform: translateY(-2px);
+}
+.fl-dot.sel {
+  background: var(--brass);
+  color: var(--ink);
+  border-color: var(--brass);
+  font-weight: 600;
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+.fl-reveal-anim {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: flrise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+.fl-rise {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: flr 0.6s ease forwards;
+}
+@keyframes flrise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flr {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes flgrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fl-reveal-anim,
+  .fl-rise,
+  .fl-bar-fill {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .fl-face,
+  .fl-card,
+  .fl-dot {
+    transition: none !important;
+  }
+}
