@@ -257,7 +257,9 @@ function ResultInner() {
                     <div style={{ fontSize: 12, letterSpacing: ".08em", color: C.muted, textTransform: "uppercase", marginTop: 4 }}>
                       {familyLabel(data, f.family, lang)}
                     </div>
-                    <p style={{ fontSize: 13, lineHeight: 1.5, color: C.muted, marginTop: 14 }}>{copy?.definition[lang]}</p>
+                    <p style={{ fontSize: 13.5, lineHeight: 1.6, color: "rgba(243,236,225,.82)", marginTop: 14 }}>
+                      {copy?.description[lang]}
+                    </p>
                     <div style={{ margin: "18px 0 0", height: 1, background: C.line }} />
                     <p style={{ fontFamily: DISPLAY, fontSize: 21, lineHeight: 1.3, marginTop: 20, color: C.porcelain }}>
                       « {copy?.phrase[lang]} »
