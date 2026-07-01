@@ -3,6 +3,7 @@
 // RGPD/nLPD : données minimales, anonymes par défaut, le sujet peut tout supprimer.
 
 import type { Lang, ObserverResponse } from "@core";
+import { SupabaseStore } from "./store-supabase";
 
 // ---------- Modèle ----------
 
@@ -140,14 +141,15 @@ let singleton: Store | null = null;
 
 export function getStore(): Store {
   if (singleton) return singleton;
-  // Défaut : mémoire (dev / démo — non partagé entre instances serverless).
-  //
-  // PRODUCTION — pour brancher Supabase (aligné LEADR), sans toucher aux écrans :
-  //   1. Appliquer `supabase/schema.sql` (tables subjects / invitations / responses).
-  //   2. Créer une classe `SupabaseStore implements Store` (mêmes méthodes).
-  //   3. Ici : `if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
-  //             singleton = new SupabaseStore(); else singleton = new MemoryStore();`
-  // L'interface `Store` est le seul contrat que consomment les routes API.
-  singleton = new MemoryStore();
+  // Supabase si les clés serveur sont présentes (persistance réelle) ;
+  // sinon mémoire (dev/démo, non partagé entre instances serverless).
+  // Prérequis Supabase : avoir appliqué `supabase/schema.sql`.
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (url && key) {
+    singleton = new SupabaseStore(url, key);
+  } else {
+    singleton = new MemoryStore();
+  }
   return singleton;
 }
