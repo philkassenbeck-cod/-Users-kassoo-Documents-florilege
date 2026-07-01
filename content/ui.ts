@@ -128,6 +128,30 @@ export const UI: Dict = {
     fr: "Pas encore assez de réponses. Revenez quand vos cercles auront répondu.",
     en: "Not enough responses yet. Come back once your circles have answered.",
   },
+
+  // Lettre de coaching (PDF via impression)
+  letterCta: { fr: "Ma lettre de coaching", en: "My coaching letter" },
+  letterEyebrow: { fr: "OPTIMUP · LETTRE DE COACHING", en: "OPTIMUP · COACHING LETTER" },
+  letterPrint: { fr: "Imprimer / Enregistrer en PDF", en: "Print / Save as PDF" },
+  letterGreeting: { fr: "Bonjour", en: "Hello" },
+  letterOpen: {
+    fr: "Voici votre florilège : les trois forces qui, aujourd'hui, vous signent. Non pas tout ce que vous êtes, mais ce qui ressort le plus nettement — une signature, à cultiver.",
+    en: "Here is your florilège: the three strengths that, today, sign you. Not all that you are, but what stands out most clearly — a signature, to cultivate.",
+  },
+  letterNotesTitle: { fr: "Vos trois notes", en: "Your three notes" },
+  letterTeam: { fr: "En équipe", en: "With your team" },
+  letter360Title: { fr: "Le regard des autres", en: "How others see you" },
+  letterOriginTitle: { fr: "D'où viennent vos forces", en: "Where your strengths come from" },
+  letterOriginQuestion: { fr: "Une question à explorer", en: "A question to explore" },
+  letterSignatureTitle: { fr: "En une phrase", en: "In one line" },
+  letterClose: {
+    fr: "Prenez ces pages comme un miroir, pas comme un verdict. À vous d'en faire quelque chose.",
+    en: "Take these pages as a mirror, not a verdict. What you make of them is yours.",
+  },
+  letterNeedSelf: {
+    fr: "Passez d'abord le diagnostic : la lettre se compose à partir de votre florilège.",
+    en: "Take the diagnostic first: the letter is composed from your florilège.",
+  },
 };
 
 /** Résout un libellé d'interface. */

@@ -258,14 +258,17 @@ export default function Resultat() {
             </div>
           </div>
 
-          {/* Passerelle vers le 360 */}
-          <div style={{ textAlign: "center", marginTop: 48 }}>
+          {/* Passerelles : 360 + lettre de coaching */}
+          <div style={{ textAlign: "center", marginTop: 48, display: "flex", gap: 22, justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
             <Link
               href="/360"
               className="fl-btn fl-reveal"
               style={{ textDecoration: "none", display: "inline-block" }}
             >
               {tr("ask360", lang)}
+            </Link>
+            <Link href="/lettre" style={{ color: C.brass, fontSize: 14 }}>
+              {tr("letterCta", lang)} →
             </Link>
           </div>
 

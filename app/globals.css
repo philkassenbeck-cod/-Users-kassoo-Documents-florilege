@@ -226,6 +226,63 @@ body {
   font-weight: 600;
 }
 
+/* ── Lettre de coaching (surface papier, imprimable) ────── */
+.letter-stage {
+  min-height: 100vh;
+  padding: 40px 16px 80px;
+  display: flex;
+  justify-content: center;
+}
+.letter-paper {
+  width: 100%;
+  max-width: 720px;
+  background: var(--porcelain);
+  color: var(--ink);
+  border-radius: 6px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+  padding: 60px 64px 56px;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+.letter-paper h1,
+.letter-paper h2,
+.letter-paper .letter-serif {
+  font-family: var(--display);
+}
+.letter-rule {
+  height: 1px;
+  background: rgba(26, 26, 40, 0.15);
+  margin: 34px 0;
+}
+.letter-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9a7a34;
+}
+
+@media print {
+  @page {
+    margin: 16mm;
+  }
+  html,
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .letter-stage {
+    padding: 0;
+  }
+  .letter-paper {
+    box-shadow: none;
+    border-radius: 0;
+    max-width: none;
+    padding: 0;
+  }
+}
+
 /* ── Animations ─────────────────────────────────────────── */
 .fl-reveal-anim {
   opacity: 0;

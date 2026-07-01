@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   florilegeData as data,
@@ -261,6 +262,14 @@ function Debrief360Inner() {
           <p style={{ fontSize: 12, color: C.muted, textAlign: "center", marginTop: 24, lineHeight: 1.6, fontStyle: "italic", fontFamily: DISPLAY }}>
             {t("dbFooter")}
           </p>
+
+          {id && (
+            <div style={{ textAlign: "center", marginTop: 18 }}>
+              <Link href={`/lettre?id=${id}`} style={{ color: C.brass, fontSize: 13 }}>
+                {t("letterCta")} →
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
