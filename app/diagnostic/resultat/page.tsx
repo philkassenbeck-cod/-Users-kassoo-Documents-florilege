@@ -258,6 +258,17 @@ export default function Resultat() {
             </div>
           </div>
 
+          {/* Passerelle vers le 360 */}
+          <div style={{ textAlign: "center", marginTop: 48 }}>
+            <Link
+              href="/360"
+              className="fl-btn fl-reveal"
+              style={{ textDecoration: "none", display: "inline-block" }}
+            >
+              {tr("ask360", lang)}
+            </Link>
+          </div>
+
           {/* Disclaimer d'origine — TOUJOURS affiché (couche SENS) */}
           <p
             style={{

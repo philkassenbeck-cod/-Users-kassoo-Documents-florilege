@@ -55,6 +55,79 @@ export const UI: Dict = {
     fr: "Passez le diagnostic pour révéler vos trois forces dominantes.",
     en: "Take the diagnostic to reveal your three dominant strengths.",
   },
+
+  // Passerelle self → 360
+  ask360: { fr: "Demander le regard des autres", en: "Ask how others see you" },
+
+  // 360 — invitation
+  invEyebrow: { fr: "OPTIMUP · FLORILÈGE 360", en: "OPTIMUP · FLORILÈGE 360" },
+  invTitle: { fr: "Le regard des autres", en: "How others see you" },
+  invSubtitle: {
+    fr: "Choisissez vos cercles. Générez un lien par personne. Tout reste anonyme.",
+    en: "Choose your circles. Generate one link per person. Everything stays anonymous.",
+  },
+  invNameLabel: { fr: "Votre prénom", en: "Your first name" },
+  invNamePlaceholder: { fr: "Prénom", en: "First name" },
+  invCirclesLabel: { fr: "Vos cercles", en: "Your circles" },
+  invCountHint: { fr: "liens à générer", en: "links to generate" },
+  invGenerate: { fr: "Générer les liens", en: "Generate the links" },
+  invNeedSelf: {
+    fr: "Passez d'abord votre propre diagnostic : le 360 se compare à votre regard.",
+    en: "Take your own diagnostic first: the 360 compares against your own view.",
+  },
+  invLinksTitle: { fr: "Vos liens répondants", en: "Your respondent links" },
+  invLinksHint: {
+    fr: "Partagez chaque lien à une personne. ~60 secondes de réponse, anonyme.",
+    en: "Share each link with one person. ~60 seconds to answer, anonymous.",
+  },
+  invCopy: { fr: "Copier", en: "Copy" },
+  invCopied: { fr: "Copié", en: "Copied" },
+  invSeeResult: { fr: "Voir mon débrief 360", en: "See my 360 debrief" },
+  invDeleteAll: { fr: "Tout supprimer", en: "Delete everything" },
+  invDeleteConfirm: {
+    fr: "Supprimer définitivement ce 360 et toutes les réponses ?",
+    en: "Permanently delete this 360 and all responses?",
+  },
+  invThreshold: {
+    fr: "Un cercle n'apparaît qu'à partir de 3 réponses (anonymat).",
+    en: "A circle only appears from 3 responses onward (anonymity).",
+  },
+
+  // 360 — formulaire répondant
+  respConsentTitle: { fr: "Un regard, en confiance", en: "An honest look" },
+  respConsentBody: {
+    fr: "On vous demande votre regard sur {name}. 16 affirmations, ~60 secondes. Vos réponses sont anonymes et agrégées : {name} ne verra jamais qui a répondu quoi.",
+    en: "You're asked for your view of {name}. 16 statements, ~60 seconds. Your answers are anonymous and aggregated: {name} will never see who said what.",
+  },
+  respConsentAccept: { fr: "J'accepte et je commence", en: "I agree and start" },
+  respScaleHint: { fr: "À quel point êtes-vous d'accord ?", en: "How much do you agree?" },
+  respSubmit: { fr: "Envoyer mon regard", en: "Send my view" },
+  respThanksTitle: { fr: "Merci", en: "Thank you" },
+  respThanksBody: {
+    fr: "Votre regard est enregistré. Il rejoindra celui des autres, en toute confidentialité.",
+    en: "Your view is recorded. It will join the others, in full confidence.",
+  },
+  respDone: { fr: "Ce lien a déjà été utilisé.", en: "This link has already been used." },
+  respInvalid: { fr: "Lien invalide ou expiré.", en: "Invalid or expired link." },
+
+  // 360 — débrief
+  dbYou: { fr: "Vous", en: "You" },
+  dbOthers: { fr: "Autres", en: "Others" },
+  dbAll: { fr: "Tous", en: "All" },
+  dbResp: { fr: "réponses · anonymes", en: "responses · anonymous" },
+  dbLocked: { fr: "3 réponses minimum", en: "3 responses minimum" },
+  dbPepiteTitle: {
+    fr: "Ce qu'ils ont vu que vous ne voyez pas",
+    en: "What they saw that you don't",
+  },
+  dbFooter: {
+    fr: "L'écart n'est pas un jugement : c'est une conversation qui commence.",
+    en: "A gap isn't a verdict — it's a conversation starting.",
+  },
+  dbWaiting: {
+    fr: "Pas encore assez de réponses. Revenez quand vos cercles auront répondu.",
+    en: "Not enough responses yet. Come back once your circles have answered.",
+  },
 };
 
 /** Résout un libellé d'interface. */

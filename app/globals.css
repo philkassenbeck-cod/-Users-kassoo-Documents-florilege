@@ -164,6 +164,36 @@ body {
   cursor: not-allowed;
 }
 
+/* ── Cadre téléphone (formulaire répondant + débrief 360) ── */
+.fl-phone-stage {
+  background: #111119;
+  min-height: 100vh;
+  padding: 26px 14px;
+  display: flex;
+  justify-content: center;
+}
+.fl-phone {
+  width: 100%;
+  max-width: 420px;
+  background: var(--ink);
+  border-radius: 34px;
+  border: 1px solid var(--line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+  align-self: flex-start;
+}
+.fl-scroll {
+  padding: 26px 22px 30px;
+}
+.fl-note {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(165deg, var(--ink2), var(--panel));
+  padding: 17px 17px 15px;
+  margin-top: 13px;
+}
+
 /* ── Likert (passation) ─────────────────────────────────── */
 .fl-likert {
   display: flex;
