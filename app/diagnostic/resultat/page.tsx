@@ -223,24 +223,22 @@ export default function Resultat() {
             <div className="fl-hint" style={{ marginBottom: 20 }}>
               {tr("constTitle", lang)}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
               {result.scores.map((s, i) => {
                 const force = findForce(data, s.forceId)!;
+                const copy = forceContent[s.forceId];
                 const top = florilegeIds.includes(s.forceId);
                 return (
-                  <div key={s.forceId} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <div
-                      style={{
-                        width: 96,
-                        fontSize: 13.5,
-                        color: top ? C.porcelain : C.muted,
-                        textAlign: "right",
-                        flexShrink: 0,
-                      }}
-                    >
-                      {forceLabel(force, lang, USE_ALT_COMPASSION_LABEL)}
+                  <div key={s.forceId}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12 }}>
+                      <span style={{ fontFamily: DISPLAY, fontSize: 17, color: top ? C.porcelain : C.muted }}>
+                        {forceLabel(force, lang, USE_ALT_COMPASSION_LABEL)}
+                      </span>
+                      <span style={{ fontSize: 12.5, color: top ? C.brass : C.muted, flexShrink: 0 }}>
+                        {s.score.toFixed(1)}
+                      </span>
                     </div>
-                    <div className="fl-track">
+                    <div className="fl-track" style={{ marginTop: 7 }}>
                       <div
                         className="fl-bar-fill"
                         style={{
@@ -252,9 +250,9 @@ export default function Resultat() {
                         }}
                       />
                     </div>
-                    <div style={{ width: 30, fontSize: 12.5, color: top ? C.brass : C.muted, flexShrink: 0 }}>
-                      {s.score.toFixed(1)}
-                    </div>
+                    <p style={{ fontSize: 12.5, lineHeight: 1.45, color: C.muted, marginTop: 7 }}>
+                      {copy?.definition[lang]}
+                    </p>
                   </div>
                 );
               })}
