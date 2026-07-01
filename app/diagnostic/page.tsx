@@ -15,6 +15,7 @@ import { C, DISPLAY } from "@/components/theme";
 import { tr } from "@/content/ui";
 
 export const RESPONSES_KEY = "florilege_responses";
+export const IDENTITY_KEY = "florilege_identity";
 
 export default function Passation() {
   const { lang } = useLang();
@@ -24,6 +25,67 @@ export default function Passation() {
 
   const [responses, setResponses] = useState<Responses>({});
   const [pos, setPos] = useState(0);
+
+  // Étape 1 : inscription (prénom + email) avant le test.
+  const [started, setStarted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const canStart = name.trim().length > 0 && email.includes("@");
+
+  function start() {
+    if (!canStart) return;
+    try {
+      window.sessionStorage.setItem(IDENTITY_KEY, JSON.stringify({ name: name.trim(), email: email.trim() }));
+    } catch {
+      /* stockage indisponible */
+    }
+    setStarted(true);
+  }
+
+  if (!started) {
+    return (
+      <main className="fl-wrap" style={{ minHeight: "100vh", maxWidth: 520 }}>
+        <div style={{ position: "absolute", top: 40, right: 22 }}>
+          <LangToggle />
+        </div>
+        <div style={{ marginTop: "14vh" }}>
+          <div className="fl-hint" style={{ color: C.brass, marginBottom: 18 }}>
+            {tr("passationEyebrow", lang)}
+          </div>
+          <h1 style={{ fontFamily: DISPLAY, fontSize: "clamp(30px,5vw,44px)", fontWeight: 400, margin: 0, lineHeight: 1.1 }}>
+            {tr("startTitle", lang)}
+          </h1>
+          <p style={{ color: C.muted, fontSize: 15, lineHeight: 1.6, marginTop: 14, maxWidth: 440 }}>
+            {tr("startBody", lang)}
+          </p>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={tr("gateName", lang)}
+            maxLength={60}
+            style={introInput}
+          />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && start()}
+            placeholder={tr("gateEmail", lang)}
+            type="email"
+            maxLength={120}
+            style={introInput}
+          />
+          <button
+            className="fl-btn fl-reveal"
+            onClick={start}
+            disabled={!canStart}
+            style={{ marginTop: 20, opacity: canStart ? 1 : 0.45 }}
+          >
+            {tr("startBtn", lang)}
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   const current = served[pos];
   const total = served.length;
@@ -129,3 +191,17 @@ export default function Passation() {
     </main>
   );
 }
+
+const introInput: React.CSSProperties = {
+  display: "block",
+  width: "100%",
+  maxWidth: 340,
+  marginTop: 12,
+  padding: "12px 16px",
+  borderRadius: 12,
+  border: `1px solid ${C.line}`,
+  background: C.panel,
+  color: C.porcelain,
+  fontSize: 16,
+  fontFamily: DISPLAY,
+};

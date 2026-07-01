@@ -22,6 +22,14 @@ export const UI: Dict = {
   landingCta: { fr: "Commencer le diagnostic", en: "Start the diagnostic" },
   landingMinutes: { fr: "≈ 8 minutes · FR / EN", en: "≈ 8 minutes · FR / EN" },
 
+  // Inscription (début du test)
+  startTitle: { fr: "Avant de commencer", en: "Before you begin" },
+  startBody: {
+    fr: "Entrez votre prénom et votre email : on garde votre florilège et on vous envoie votre lien pour y revenir quand vous voulez.",
+    en: "Enter your first name and email: we keep your florilège and send you a link to come back anytime.",
+  },
+  startBtn: { fr: "Commencer le diagnostic", en: "Start the diagnostic" },
+
   // Passation
   passationEyebrow: { fr: "LE DIAGNOSTIC", en: "THE DIAGNOSTIC" },
   progressOf: { fr: "sur", en: "of" },

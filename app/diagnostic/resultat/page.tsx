@@ -18,7 +18,7 @@ import { C, DISPLAY } from "@/components/theme";
 import { tr } from "@/content/ui";
 import { forceContent, composeSignature } from "@/content/forces";
 import { USE_ALT_COMPASSION_LABEL } from "@/content/config";
-import { RESPONSES_KEY } from "../page";
+import { RESPONSES_KEY, IDENTITY_KEY } from "../page";
 
 const SUBJECT_KEY = "florilege_subject";
 
@@ -53,6 +53,7 @@ function ResultInner() {
   const [saving, setSaving] = useState(false);
   const [savedLink, setSavedLink] = useState<string | null>(null);
   const [emailed, setEmailed] = useState(false);
+  const [savedEmail, setSavedEmail] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -68,16 +69,57 @@ function ResultInner() {
         } catch {
           /* ignore */
         }
-      } else {
+        setLoaded(true);
+        return;
+      }
+
+      // Test frais : réponses + identité saisie au début.
+      let resp: Responses | null = null;
+      let ident: { name: string; email: string } | null = null;
+      try {
+        const raw = window.sessionStorage.getItem(RESPONSES_KEY);
+        if (raw) resp = JSON.parse(raw) as Responses;
+        const rawId = window.sessionStorage.getItem(IDENTITY_KEY);
+        if (rawId) ident = JSON.parse(rawId);
+      } catch {
+        /* ignore */
+      }
+      setResponses(resp);
+
+      // Inscription faite au début → on enregistre tout seul et on révèle.
+      if (resp && ident && ident.name) {
         try {
-          const raw = window.sessionStorage.getItem(RESPONSES_KEY);
-          if (raw) setResponses(JSON.parse(raw) as Responses);
+          const scores = Object.fromEntries(
+            computeFlorilege(data, resp).scores.map((s) => [s.forceId, s.score])
+          );
+          const res = await fetch("/api/persons", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: ident.name, email: ident.email || null, lang, selfScores: scores }),
+          });
+          const j = await res.json();
+          setPersonId(j.id);
+          setSavedLink(j.link);
+          setEmailed(!!j.emailed);
+          setSavedEmail(ident.email || "");
+          try {
+            window.localStorage.setItem(SUBJECT_KEY, j.id);
+            // Évite un ré-enregistrement si la page est rafraîchie.
+            window.sessionStorage.removeItem(RESPONSES_KEY);
+            window.sessionStorage.removeItem(IDENTITY_KEY);
+            window.history.replaceState(null, "", `/diagnostic/resultat?id=${j.id}`);
+          } catch {
+            /* ignore */
+          }
         } catch {
           /* ignore */
         }
+        setRevealed(true); // révélation directe, sans re-demander
       }
+      // sinon : pas d'identité → le formulaire de secours (gate) s'affichera
       setLoaded(true);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlId]);
 
   const model = useMemo(() => {
@@ -107,6 +149,7 @@ function ResultInner() {
       setPersonId(j.id);
       setSavedLink(j.link);
       setEmailed(!!j.emailed);
+      setSavedEmail(email.trim());
       try {
         window.localStorage.setItem(SUBJECT_KEY, j.id);
       } catch {
@@ -219,9 +262,9 @@ function ResultInner() {
                 background: "linear-gradient(150deg, rgba(201,164,92,.1), rgba(228,169,143,.05))",
               }}
             >
-              {emailed && email ? (
+              {emailed && savedEmail ? (
                 <div style={{ fontSize: 14, color: C.porcelain }}>
-                  ✦ {tr("gateEmailSent", lang)} <strong>{email}</strong>.
+                  ✦ {tr("gateEmailSent", lang)} <strong>{savedEmail}</strong>.
                 </div>
               ) : null}
               <div style={{ fontSize: 12.5, color: C.muted, marginTop: emailed ? 6 : 0 }}>
