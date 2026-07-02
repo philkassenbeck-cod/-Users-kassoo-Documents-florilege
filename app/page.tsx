@@ -57,6 +57,11 @@ export default function Landing() {
           </Link>
           <span className="fl-hint">{tr("landingMinutes", lang)}</span>
         </div>
+        <div style={{ marginTop: 22 }}>
+          <Link href="/login" style={{ color: C.brass, fontSize: 14 }}>
+            {tr("loginCta", lang)} →
+          </Link>
+        </div>
       </div>
     </main>
   );

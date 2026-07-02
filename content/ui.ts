@@ -22,6 +22,30 @@ export const UI: Dict = {
   landingCta: { fr: "Commencer le diagnostic", en: "Start the diagnostic" },
   landingMinutes: { fr: "≈ 8 minutes · FR / EN", en: "≈ 8 minutes · FR / EN" },
 
+  // Connexion (lien magique Supabase)
+  loginTitle: { fr: "Connexion", en: "Sign in" },
+  loginSubtitle: {
+    fr: "Entrez votre email : on vous envoie un lien de connexion.",
+    en: "Enter your email: we'll send you a sign-in link.",
+  },
+  loginSend: { fr: "Recevoir mon lien", en: "Send my link" },
+  loginSending: { fr: "Envoi…", en: "Sending…" },
+  loginSentTitle: { fr: "Vérifiez votre boîte mail", en: "Check your email" },
+  loginSentBody: { fr: "On a envoyé un lien de connexion à", en: "We sent a sign-in link to" },
+  loginSentHint: {
+    fr: "Cliquez le lien dans l'email pour continuer.",
+    en: "Click the link in the email to continue.",
+  },
+  backHome: { fr: "← Retour à l'accueil", en: "← Back to home" },
+  loginCta: { fr: "Se connecter", en: "Sign in" },
+  needLoginTitle: { fr: "Connectez-vous pour commencer", en: "Sign in to begin" },
+  needLoginBody: {
+    fr: "Votre florilège est lié à votre email : vous le retrouverez et pourrez lancer le 360 quand vous voulez.",
+    en: "Your florilège is tied to your email: you'll find it again and can launch the 360 anytime.",
+  },
+  signOut: { fr: "Se déconnecter", en: "Sign out" },
+  loading: { fr: "Un instant…", en: "One moment…" },
+
   // Inscription (début du test)
   startTitle: { fr: "Avant de commencer", en: "Before you begin" },
   startBody: {
@@ -58,6 +82,10 @@ export const UI: Dict = {
   gateSending: { fr: "Un instant…", en: "One moment…" },
   gateEmailSent: { fr: "Lien envoyé à", en: "Link sent to" },
   gateKeepLink: { fr: "Votre lien à conserver", en: "Your link to keep" },
+  savedToAccount: {
+    fr: "Enregistré dans votre compte — reconnectez-vous avec votre email pour le retrouver.",
+    en: "Saved to your account — sign in with your email to find it again.",
+  },
   notes: {
     fr: "Note de tête|Note de cœur|Note de fond",
     en: "Top note|Heart note|Base note",

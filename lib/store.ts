@@ -9,7 +9,8 @@ import { SupabaseStore } from "./store-supabase";
 
 export interface SubjectInput {
   name: string; // prénom, interpolé dans les items observateur ({name})
-  email: string | null; // pour renvoyer le lien perso (peut être null)
+  email: string | null; // email (issu du compte Supabase)
+  userId: string | null; // id du compte Supabase (auth), s'il est connecté
   pronoun: string; // il | elle | iel | neutral
   lang: Lang;
   selfScores: Record<string, number>; // {forceId: score} issu de la passation self
@@ -48,6 +49,10 @@ export interface SubjectSummary {
 export interface Store {
   /** Persiste une personne à la fin du test self. */
   createPerson(input: SubjectInput): Promise<Subject>;
+  /** Crée ou met à jour le florilège du compte connecté (1 par utilisateur). */
+  upsertByUser(input: SubjectInput): Promise<Subject>;
+  /** Florilège rattaché à un compte Supabase. */
+  getSubjectByUser(userId: string): Promise<Subject | null>;
   getSubject(id: string): Promise<Subject | null>;
   deleteSubject(id: string): Promise<void>; // supprime personne + invitations + réponses (RGPD)
   /** Ajoute des liens répondants (360) à une personne existante. */
@@ -89,6 +94,20 @@ class MemoryStore implements Store {
     const subject: Subject = { ...input, id: uid("s_"), createdAt: Date.now() };
     memdb().subjects.set(subject.id, subject);
     return subject;
+  }
+
+  async getSubjectByUser(userId: string): Promise<Subject | null> {
+    return [...memdb().subjects.values()].find((s) => s.userId === userId) ?? null;
+  }
+
+  async upsertByUser(input: SubjectInput): Promise<Subject> {
+    const existing = input.userId ? await this.getSubjectByUser(input.userId) : null;
+    if (existing) {
+      const updated: Subject = { ...existing, name: input.name, email: input.email, lang: input.lang, selfScores: input.selfScores };
+      memdb().subjects.set(updated.id, updated);
+      return updated;
+    }
+    return this.createPerson(input);
   }
 
   async getSubject(id: string) {

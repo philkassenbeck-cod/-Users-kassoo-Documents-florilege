@@ -46,6 +46,7 @@ export class SupabaseStore implements Store {
       id: subject.id,
       name: subject.name,
       email: subject.email,
+      user_id: subject.userId,
       pronoun: subject.pronoun,
       lang: subject.lang,
       self_scores: subject.selfScores,
@@ -54,19 +55,40 @@ export class SupabaseStore implements Store {
     return subject;
   }
 
-  async getSubject(id: string): Promise<Subject | null> {
-    const { data } = await this.db.from("subjects").select("*").eq("id", id).maybeSingle();
-    if (!data) return null;
-    const d = data as Row;
+  private mapSubject(d: Row): Subject {
     return {
       id: String(d.id),
       name: String(d.name),
       email: d.email ? String(d.email) : null,
+      userId: d.user_id ? String(d.user_id) : null,
       pronoun: String(d.pronoun),
       lang: d.lang === "en" ? "en" : "fr",
       selfScores: (d.self_scores ?? {}) as Record<string, number>,
       createdAt: ts(d.created_at),
     };
+  }
+
+  async getSubject(id: string): Promise<Subject | null> {
+    const { data } = await this.db.from("subjects").select("*").eq("id", id).maybeSingle();
+    return data ? this.mapSubject(data as Row) : null;
+  }
+
+  async getSubjectByUser(userId: string): Promise<Subject | null> {
+    const { data } = await this.db.from("subjects").select("*").eq("user_id", userId).limit(1).maybeSingle();
+    return data ? this.mapSubject(data as Row) : null;
+  }
+
+  async upsertByUser(input: SubjectInput): Promise<Subject> {
+    const existing = input.userId ? await this.getSubjectByUser(input.userId) : null;
+    if (existing) {
+      const { error } = await this.db
+        .from("subjects")
+        .update({ name: input.name, email: input.email, lang: input.lang, self_scores: input.selfScores })
+        .eq("id", existing.id);
+      if (error) throw new Error(error.message);
+      return { ...existing, name: input.name, email: input.email, lang: input.lang, selfScores: input.selfScores };
+    }
+    return this.createPerson(input);
   }
 
   async deleteSubject(id: string): Promise<void> {

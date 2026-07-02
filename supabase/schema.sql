@@ -5,14 +5,17 @@
 create table if not exists subjects (
   id          text primary key,
   name        text not null,
-  email       text,                     -- pour renvoyer le lien perso
+  email       text,                     -- email du compte Supabase
+  user_id     text,                     -- id du compte Supabase (auth)
   pronoun     text not null default 'neutral',
   lang        text not null default 'fr',
   self_scores jsonb not null,           -- { forceId: score }
   created_at  timestamptz not null default now()
 );
--- Si la table subjects existe déjà sans email :
+-- Si la table subjects existe déjà sans email / user_id :
 alter table subjects add column if not exists email text;
+alter table subjects add column if not exists user_id text;
+create unique index if not exists idx_subjects_user on subjects(user_id) where user_id is not null;
 
 create table if not exists invitations (
   token       text primary key,
